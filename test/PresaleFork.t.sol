@@ -51,15 +51,7 @@ contract PresaleForkTest is Test {
         zum.approve(predictedPresale, maxSellingAmount);
 
         Presale presale = new Presale(
-            address(zum),
-            address(usdt),
-            address(usdc),
-            treasury,
-            ARB_ETH_USD_FEED,
-            maxSellingAmount,
-            start,
-            t3,
-            phases
+            address(zum), address(usdt), address(usdc), treasury, ARB_ETH_USD_FEED, maxSellingAmount, start, t3, phases
         );
 
         uint256 price = presale.getEtherPrice();
@@ -97,15 +89,7 @@ contract PresaleForkTest is Test {
         zum.approve(predictedPresale, maxSellingAmount);
 
         Presale presale = new Presale(
-            address(zum),
-            address(usdt),
-            address(usdc),
-            treasury,
-            ARB_ETH_USD_FEED,
-            maxSellingAmount,
-            start,
-            t3,
-            phases
+            address(zum), address(usdt), address(usdc), treasury, ARB_ETH_USD_FEED, maxSellingAmount, start, t3, phases
         );
 
         address buyer = address(0xBEEF);
@@ -149,15 +133,7 @@ contract PresaleForkTest is Test {
         zum.approve(predictedPresale, maxSellingAmount);
 
         Presale presale = new Presale(
-            address(zum),
-            address(usdt),
-            address(usdc),
-            treasury,
-            ARB_ETH_USD_FEED,
-            maxSellingAmount,
-            start,
-            t3,
-            phases
+            address(zum), address(usdt), address(usdc), treasury, ARB_ETH_USD_FEED, maxSellingAmount, start, t3, phases
         );
 
         presale.pause();

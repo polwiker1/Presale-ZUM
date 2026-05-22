@@ -63,15 +63,7 @@ contract PresaleTest is Test {
         address predictedPresale = vm.computeCreateAddress(address(this), deployerNonce);
         zum.approve(predictedPresale, PRESALE_SUPPLY);
         presale = new Presale(
-            address(zum),
-            address(usdt),
-            address(usdc),
-            treasury,
-            address(feed),
-            PRESALE_SUPPLY,
-            start,
-            t3,
-            phases
+            address(zum), address(usdt), address(usdc), treasury, address(feed), PRESALE_SUPPLY, start, t3, phases
         );
 
         vm.prank(buyer);

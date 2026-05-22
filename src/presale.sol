@@ -146,7 +146,7 @@ contract Presale is Ownable, Pausable {
         totalSold += tokenAmountToReceive;
         userTokenBalance[msg.sender] += tokenAmountToReceive;
 
-        (bool success, ) = fundsReceiverAddress.call{value: msg.value}("");
+        (bool success,) = fundsReceiverAddress.call{value: msg.value}("");
         require(success, "Transfer failed.");
 
         emit TokenBuy(msg.sender, msg.value);
@@ -162,7 +162,7 @@ contract Presale is Ownable, Pausable {
     }
 
     function getEtherPrice() public view returns (uint256) {
-        (uint80 roundId, int256 price, , uint256 updatedAt, uint80 answeredInRound) =
+        (uint80 roundId, int256 price,, uint256 updatedAt, uint80 answeredInRound) =
             IAggregator(datafeedaddress).latestRoundData();
 
         require(price > 0, "Invalid ETH price");
@@ -179,7 +179,7 @@ contract Presale is Ownable, Pausable {
 
     function emergencyEthWithdraw() external onlyOwner {
         uint256 balance = address(this).balance;
-        (bool success, ) = msg.sender.call{value: balance}("");
+        (bool success,) = msg.sender.call{value: balance}("");
         require(success, "Transfer failed.");
     }
 
