@@ -16,6 +16,7 @@ contract PresaleTest is Test {
     address public owner = address(this);
     address public buyer = address(0xBEEF);
     address public treasury = address(0xCAFE);
+    address public attacker = address(0xBAD);
 
     uint256 public constant TOTAL_SUPPLY = 1_000_000e18;
     uint256 public constant PRESALE_SUPPLY = 100_000e18;
@@ -152,5 +153,88 @@ contract PresaleTest is Test {
 
         vm.expectRevert("Price too old");
         presale.getEtherPrice();
+    }
+
+    function testRevert_BuyWithStable_WhenBlacklisted() public {
+        vm.warp(presale.startingTime() + 1);
+        presale.blackList(buyer);
+
+        vm.prank(buyer);
+        vm.expectRevert("You are blacklisted");
+        presale.buyWithStable(address(usdt), 100e6);
+    }
+
+    function testRevert_BuyWithStable_WithInvalidToken() public {
+        vm.warp(presale.startingTime() + 1);
+
+        MockERC20 dai = new MockERC20("Dai Stablecoin", "DAI", 18);
+        dai.mint(buyer, 10_000e18);
+        vm.prank(buyer);
+        dai.approve(address(presale), type(uint256).max);
+
+        vm.prank(buyer);
+        vm.expectRevert("Invalid token address");
+        presale.buyWithStable(address(dai), 100e18);
+    }
+
+    function testRevert_BuyWithStable_BeforeStart() public {
+        vm.warp(presale.startingTime() - 1);
+
+        vm.prank(buyer);
+        vm.expectRevert("Presale has not started yet");
+        presale.buyWithStable(address(usdt), 100e6);
+    }
+
+    function testRevert_BuyWithStable_AfterEnd() public {
+        vm.warp(presale.endingTime() + 1);
+
+        vm.prank(buyer);
+        vm.expectRevert("Presale has ended");
+        presale.buyWithStable(address(usdt), 100e6);
+    }
+
+    function testClaim_AfterEnd_TransfersTokens() public {
+        vm.warp(presale.startingTime() + 1);
+
+        vm.prank(buyer);
+        presale.buyWithStable(address(usdt), 600e6); // 10,000 ZUM
+
+        vm.warp(presale.endingTime() + 1);
+
+        uint256 before = zum.balanceOf(buyer);
+        vm.prank(buyer);
+        presale.claim();
+        uint256 afterBal = zum.balanceOf(buyer);
+
+        assertEq(afterBal - before, 10_000e18);
+        assertEq(presale.userTokenBalance(buyer), 0);
+    }
+
+    function testOnlyOwner_GuardsAdminFunctions() public {
+        vm.deal(address(presale), 1 ether);
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        presale.pause();
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        presale.unpause();
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        presale.blackList(buyer);
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        presale.removeBlackList(buyer);
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        presale.emergencyERC20Withdraw(address(usdt), 1e6);
+
+        vm.prank(attacker);
+        vm.expectRevert();
+        presale.emergencyEthWithdraw();
     }
 }
