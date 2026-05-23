@@ -1,4 +1,6 @@
-# Presale ZUM - Prototipo de Preventa
+'''/*/Presale ZUM – Governance Token Prototype
+This repository contains the prototype for the presale of ZUM, the governance token of the DeFi platform under development.
+The goal is to validate a staged presale model with progressive pricing, capped allocations, purchases using stablecoins and ETH, and strong security practices before production deployment.# Presale ZUM - Prototipo de Preventa
 
 Este repositorio contiene el **prototipo de presale** que usaremos para el despliegue de la **moneda de gobernanza (ZUM)** de la plataforma DeFi que venimos construyendo.
 
@@ -14,7 +16,17 @@ El contrato `Presale` permite:
 - Compra con **ETH** usando oráculo **Chainlink ETH/USD**.
 - Sistema de **claim** al finalizar la preventa.
 - Controles de seguridad operativa: `pause/unpause`, blacklist y retiros de emergencia con `onlyOwner`.
+Contract Highlights:
 
+Three presale stages with configurable pricing.
+
+Cumulative supply distribution (33.33% / 33.33% / 33.34%).
+
+Purchases in USDT, USDC, or ETH via Chainlink ETH/USD oracle.
+
+Claim system after presale completion.
+
+Operational safety controls: pause/unpause, blacklist, and emergency withdrawals (onlyOwner).
 ## Contexto del estudio
 
 Parámetros base trabajados en esta iteración:
